@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ContactHub - Smart Contact Manger</title>
+    <link rel="shortcut icon" href="./contact.png" type="image/x-icon">
     <link rel="stylesheet" href="./bootstrap.min.css">
     <link rel="stylesheet" href="./style.css">
 </head>
+
 <body class="bg-light">
     <nav class="navbar bg-white position-sticky top-0">
         <div class="bg-white container">
@@ -80,7 +82,7 @@
                                 </svg></span>
                             <div>
                                 <p class="fs-6 text-uppercase mb-0 fw-medium text-info">favorites</p>
-                                <span class="fw-bold text-dark fs-4 lh-1">0</span>
+                                <span class="fw-bold text-dark fs-4 lh-1 favContactTotal">0</span>
                             </div>
                         </div>
                     </div>
@@ -93,7 +95,7 @@
                                 </svg></span>
                             <div>
                                 <p class="fs-6 text-uppercase mb-0 fw-medium text-info">emergency</p>
-                                <span class="fw-bold text-dark fs-4 lh-1">0</span>
+                                <span class="fw-bold text-dark fs-4 lh-1 emergencyContactTotal">0</span>
                             </div>
                         </div>
                     </div>
@@ -288,31 +290,37 @@
                                         <p class="fw-normal text-info">Quick access to starred contacts</p>
                                     </div>
                                 </div>
-                                <div class="p-2 overflow-y-auto main-contact-wrapper" id="favoriteContact">
-                                    <div class="text-center contact-wrapper" id="noFavorite">
+                                <div class="p-2 overflow-y-auto bg-white main-contact-wrapper row " id="favoriteList">
+                                    <div class="text-center contact-wrapper">
                                         <p class="text-info fs-14 fw-normal">No favourite yet</p>
                                     </div>
-                                    <!-- <div class="d-flex align-items-center justify-content-center flex-column" >
-                                        <div>
-                                            <div
-                                                class="text-white fw-semibold fs-14 d-flex justify-content-center align-items-center img-holder text-uppercase">
-                                                sh
+                                    <!-- <div class="col-12 fav">
+                                        <div class="d-flex gap-3 align-items-center justify-content-center">
+                                            <div>
+                                                <div
+                                                    class="text-white fw-semibold fs-14 d-flex justify-content-center align-items-center img-holder text-uppercase">
+                                                    sh
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="w-50 mt-3">
-                                            <h4 class="text-dark mb-0 fw-medium fs-14">shahd</h4>
-                                            <p class="text-info fs-12 fw-medium">011137348956</p>
-                                        </div>
-                                        <a href="tel">
-                                            <div
-                                                class="svg-info-wrap wh-36 d-flex justify-content-center align-items-center rounded-3 light-green">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                                                    width="12px" height="12px">
-                                                    <path fill="#009966"
-                                                        d="M160.2 25C152.3 6.1 131.7-3.9 112.1 1.4l-5.5 1.5c-64.6 17.6-119.8 80.2-103.7 156.4 37.1 175 174.8 312.7 349.8 349.8 76.3 16.2 138.8-39.1 156.4-103.7l1.5-5.5c5.4-19.7-4.7-40.3-23.5-48.1l-97.3-40.5c-16.5-6.9-35.6-2.1-47 11.8l-38.6 47.2C233.9 335.4 177.3 277 144.8 205.3L189 169.3c13.9-11.3 18.6-30.4 11.8-47L160.2 25z" />
-                                                </svg>
+                                            <div class="w-50 mt-3 text-center">
+                                                <h4 class="text-dark mb-0 fw-medium fs-14">
+                                                    ${contactInfo[i].name}
+                                                </h4>
+                                                <p class="text-info fs-12 fw-medium">
+                                                    ${contactInfo[i].number}
+                                                </p>
                                             </div>
-                                        </a>
+                                            <a href="tel:${contactInfo[i].number}">
+                                                <div
+                                                    class="svg-info-wrap wh-36 d-flex justify-content-center align-items-center rounded-3 light-green">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                                        width="12px" height="12px">
+                                                        <path fill="#009966"
+                                                            d="M160.2 25C152.3 6.1 131.7-3.9 112.1 1.4l-5.5 1.5c-64.6 17.6-119.8 80.2-103.7 156.4 37.1 175 174.8 312.7 349.8 349.8 76.3 16.2 138.8-39.1 156.4-103.7l1.5-5.5c5.4-19.7-4.7-40.3-23.5-48.1l-97.3-40.5c-16.5-6.9-35.6-2.1-47 11.8l-38.6 47.2C233.9 335.4 177.3 277 144.8 205.3L189 169.3c13.9-11.3 18.6-30.4 11.8-47L160.2 25z" />
+                                                    </svg>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div> -->
                                 </div>
                             </div>
@@ -330,10 +338,38 @@
                                         <p class="fw-normal text-info">Important contacts for urgent calls</p>
                                     </div>
                                 </div>
-                                <div class="p-2 overflow-y-auto main-contact-wrapper">
+                                <div class="p-2 overflow-y-auto bg-white main-contact-wrapper row g-2" id="emergencyList">
                                     <div class="text-center contact-wrapper">
                                         <p class="text-info fs-14 fw-normal">No emergency contacts</p>
                                     </div>
+                                    <!-- <div class="col-12 fav">
+                                        <div class="d-flex gap-3 px-2 bg-light mb-2 rounded-3 align-items-center ">
+                                            <div>
+                                                <div
+                                                    class="text-white fw-semibold fs-14 d-flex justify-content-center align-items-center img-holder text-uppercase">
+                                                    ${imageOrLetter}
+                                                </div>
+                                            </div>
+                                            <div class="w-50 mt-3 ">
+                                                <h4 class="text-dark mb-0 fw-medium fs-14">
+                                                    ${contacts[i].name}
+                                                </h4>
+                                                <p class="text-info fs-12 fw-medium">
+                                                    ${contacts[i].number}
+                                                </p>
+                                            </div>
+                                            <a href="tel:${contacts[i].number}">
+                                                <div
+                                                    class="svg-info-wrap wh-36 d-flex justify-content-center align-items-center rounded-3 light-red">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                                        width="12px" height="12px">
+                                                        <path fill="#FF2056"
+                                                            d="M160.2 25C152.3 6.1 131.7-3.9 112.1 1.4l-5.5 1.5c-64.6 17.6-119.8 80.2-103.7 156.4 37.1 175 174.8 312.7 349.8 349.8 76.3 16.2 138.8-39.1 156.4-103.7l1.5-5.5c5.4-19.7-4.7-40.3-23.5-48.1l-97.3-40.5c-16.5-6.9-35.6-2.1-47 11.8l-38.6 47.2C233.9 335.4 177.3 277 144.8 205.3L189 169.3c13.9-11.3 18.6-30.4 11.8-47L160.2 25z" />
+                                                    </svg>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

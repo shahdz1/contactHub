@@ -6,20 +6,26 @@ var contactAddress = document.getElementById("contactAddress");
 var uploadImage = document.getElementById("uploadImage");
 var contactGroup = document.getElementById("contactGroup");
 var contactNotes = document.getElementById("contactNotes");
-var contactFavorite = document.getElementById("favoriteContact");
-var contactEmergency = document.getElementById("emergencyContact");
 var contactImage = document.getElementById("contactImage");
 var addContactBtn = document.getElementById("addContactBtn");
 var editContactBtn = document.getElementsByClassName("editContactBtn");
 var updateContactBtn = document.getElementById("updateContactBtn");
 var noContact = document.getElementById("noContact");
+var contactFavorite = document.getElementById("favoriteContact"); 
+var contactEmergency = document.getElementById("emergencyContact");
 var totalContact = document.getElementsByClassName("totalContact")
 var contactInfo = [];
+var favContactTotal = document.getElementsByClassName("favContactTotal");
+var emergencyContactTotal = document.getElementsByClassName("emergencyContactTotal");
 var updatedContact;
 if (JSON.parse(localStorage.getItem("all contacts"))) {
     contactInfo = JSON.parse(localStorage.getItem("all contacts"));
-    displayContact(contactInfo)
-    totalContactCounter()
+    displayContact(contactInfo);
+    addToFavourite(contactInfo);
+    addToEmergency(contactInfo);
+    totalContactCounter();
+    favoriteCounter()
+    emergencyCounter()
 };
 function letter(name) {
     var part = name.split(" ");
@@ -61,11 +67,13 @@ function addContactInfo() {
             group: contactGroup.value,
             notes: contactNotes.value,
             favorite: contactFavorite.checked,
-            emergency: contactEmergency.checked,
+            emergency: contactEmergency.checked
         };
         contactInfo.push(contact);
         noContact.classList.add("d-none")
         displayContact(contactInfo);
+        addToFavourite(contactInfo);
+        addToEmergency(contactInfo);
         localStorage.setItem("all contacts", JSON.stringify(contactInfo))
         clearForm();
         Swal.fire({
@@ -75,7 +83,9 @@ function addContactInfo() {
             showConfirmButton: false,
             timer: 1500
         });
-        totalContactCounter()
+        totalContactCounter();
+        favoriteCounter();
+        emergencyCounter();
         closeContactForm();
     }
 };
@@ -103,7 +113,7 @@ function displayContact(contactInfo) {
             ? `<img src="${contactInfo[i].image}" class="img-fluid rounded-3 w-100 h-100 object-fit-cover">`
             : `<span>${letter(contactInfo[i].name)}</span>`;
         blackbox += `<div class="col-12 col-md-6">
-                                <div class="rounded-4 bg-white contact-holder h-100">
+                                <div class="rounded-4 bg-white contact-holder h-100 d-flex flex-column">
                                     <div class="p-3">
                                         <div class="d-flex gap-3">
                                             <div class="position-relative">
@@ -164,7 +174,7 @@ function displayContact(contactInfo) {
                                         </div>
                                         <div class="gap-1 d-flex mt-3">
                                             ${contactInfo[i].group ? `<span class="light-blue fw-medium py-1 rounded-2 px-2">${contactInfo[i].group}</span>` : ""}
-                                           ${contactInfo[i].emergency ? `<span class="light-red fw-medium py-1 px-2 rounded-2 gap-1 d-flex align-items-center">
+                                            ${contactInfo[i].emergency ? `<span class="light-red fw-medium py-1 px-2 rounded-2 gap-1 d-flex align-items-center">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="10px" height="10px">
         <path fill="#ec003f" d="M256 107.9L241 87.1C216 52.5 175.9 32 133.1 32 59.6 32 0 91.6 0 165.1l0 2.6c0 23.6 6.2 48 16.6 72.3l106 0c3.2 0 6.1-1.9 7.4-4.9l31.8-76.3c3.7-8.8 12.3-14.6 21.8-14.8s18.3 5.4 22.2 14.1l51.3 113.9 41.4-82.8c4.1-8.1 12.4-13.3 21.5-13.3s17.4 5.1 21.5 13.3l23.2 46.3c1.4 2.7 4.1 4.4 7.2 4.4l123.6 0c10.5-24.3 16.6-48.7 16.6-72.3l0-2.6C512 91.6 452.4 32 378.9 32 336.2 32 296 52.5 271 87.1l-15 20.7zM469.6 288l-97.8 0c-21.2 0-40.6-12-50.1-31l-1.7-3.4-42.5 85.1c-4.1 8.3-12.7 13.5-22 13.3s-17.6-5.7-21.4-14.1l-49.3-109.5-10.5 25.2c-8.7 20.9-29.1 34.5-51.7 34.5l-80.2 0c47.2 73.8 123 141.7 170.4 177.9 12.4 9.4 27.6 14.1 43.1 14.1s30.8-4.6 43.1-14.1C346.6 429.7 422.4 361.8 469.6 288z" />
     </svg>
@@ -172,9 +182,9 @@ function displayContact(contactInfo) {
 </span>` : ""}
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-between py-2 px-3 card-footer mt-3">
+                                    <div class="d-flex justify-content-between py-2 px-3 card-footer mt-auto">
                                         <div class="d-flex  align-items-center">
-                                            <a href="tel">
+                                            <a href="tel:${contactInfo[i].number}">
                                                 <div
                                                     class="svg-info-wrap wh-36 d-flex justify-content-center align-items-center rounded-3 light-green">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -213,7 +223,7 @@ function displayContact(contactInfo) {
                                                 </svg>
                                             </button>
                                             <button 
-                                                class="editContactBtn rounded-3 wh-36 bg-transparent border-0 d-flex justify-content-center align-items-center" onclick="editContact(${i})"><svg
+                                                class="editContactBtn  rounded-3 wh-36 bg-transparent border-0 d-flex justify-content-center align-items-center" onclick="editContact(${i})"><svg
                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
                                                     width="14px" height="14px">
                                                     <path fill="#6a7282"
@@ -221,7 +231,7 @@ function displayContact(contactInfo) {
                                                 </svg>
                                             </button>
                                             <button onclick="deletContact(${i})"
-                                                class=" rounded-3 wh-36 bg-transparent border-0 d-flex justify-content-center align-items-center"><svg
+                                                class="delet rounded-3 wh-36 bg-transparent border-0 d-flex justify-content-center align-items-center"><svg
                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
                                                     width="14px" height="14px">
                                                     <path fill="#6a7282"
@@ -271,6 +281,8 @@ function updateContact() {
         contactInfo[updatedContact].emergency = contactEmergency.checked;
         localStorage.setItem("all contacts", JSON.stringify(contactInfo));
         displayContact(contactInfo);
+                addToFavourite(contactInfo);
+        addToEmergency(contactInfo);
         clearForm()
         document.getElementById("addContactBtn").classList.remove("d-none");
         document.getElementById("updateContactBtn").classList.add("d-none");
@@ -281,7 +293,9 @@ function updateContact() {
             showConfirmButton: false,
             timer: 1500
         });
+        emergencyCounter()
         closeContactForm()
+        favoriteCounter()
         totalContactCounter()
     }
 };
@@ -300,6 +314,8 @@ function deletContact(deletedContact) {
             localStorage.setItem("all contacts", JSON.stringify(contactInfo));
             displayContact(contactInfo)
             totalContactCounter()
+            emergencyCounter()
+            favoriteCounter()
             Swal.fire({
                 title: "Deleted!",
                 text: "Your contact has been deleted.",
@@ -351,9 +367,138 @@ function toggleFavorite(index) {
     contactInfo[index].favorite = !contactInfo[index].favorite;
     localStorage.setItem("all contacts", JSON.stringify(contactInfo));
     displayContact(contactInfo);
+    addToFavourite(contactInfo);
+    favoriteCounter()
+    emergencyCounter()
 };
 function toggleEmergency(index) {
     contactInfo[index].emergency = !contactInfo[index].emergency;
     localStorage.setItem("all contacts", JSON.stringify(contactInfo));
     displayContact(contactInfo);
+    addToEmergency(contactInfo);
+    emergencyCounter()
 };
+function addToFavourite(contacts) {
+    var blackbox = "";
+    var hasFavorite = false;
+    var favoriteList = document.getElementById("favoriteList");
+    for (var i = 0; i < contacts.length; i++) {
+        if (contacts[i].favorite) {
+            hasFavorite = true;
+            var imageOrLetter = (contacts[i].image && contacts[i].image !== "imgs/" && contacts[i].image !== "imgs/undefined")
+                ? `<img src="${contacts[i].image}" class="img-fluid rounded-3 w-100 h-100 object-fit-cover">`
+                : `<span>${letter(contacts[i].name)}</span>`;
+            blackbox += `<div class="col-12 fav">
+                                            <div class="d-flex gap-3 px-2 bg-light mb-2 rounded-3 align-items-center ">
+                                                <div>
+                                                    <div
+                                                        class="text-white fw-semibold fs-14 d-flex justify-content-center align-items-center img-holder text-uppercase">
+                                                        ${imageOrLetter}
+                                                    </div>
+                                                </div>
+                                                <div class="w-50 mt-3 ">
+                                                    <h4 class="text-dark mb-0 fw-medium fs-14">
+                                                        ${contacts[i].name}
+                                                    </h4>
+                                                    <p class="text-info fs-12 fw-medium">
+                                                        ${contacts[i].number}
+                                                    </p>
+                                                </div>
+                                                <a href="tel:${contacts[i].number}" class="ms-auto">
+                                                    <div
+                                                        class="svg-info-wrap wh-36 d-flex justify-content-center align-items-center rounded-3 light-green">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                                            width="12px" height="12px">
+                                                            <path fill="#009966"
+                                                                d="M160.2 25C152.3 6.1 131.7-3.9 112.1 1.4l-5.5 1.5c-64.6 17.6-119.8 80.2-103.7 156.4 37.1 175 174.8 312.7 349.8 349.8 76.3 16.2 138.8-39.1 156.4-103.7l1.5-5.5c5.4-19.7-4.7-40.3-23.5-48.1l-97.3-40.5c-16.5-6.9-35.6-2.1-47 11.8l-38.6 47.2C233.9 335.4 177.3 277 144.8 205.3L189 169.3c13.9-11.3 18.6-30.4 11.8-47L160.2 25z" />
+                                                        </svg>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                `;
+        }
+    }
+    if (hasFavorite) {
+        favoriteList.innerHTML = blackbox;
+    } else {
+        favoriteList.innerHTML = `
+            <div class="text-center contact-wrapper">
+                <p class="text-info fs-14 fw-normal">No favourite yet</p>
+            </div>`;
+    }
+    localStorage.setItem("all contacts", JSON.stringify(contacts));
+}
+function addToEmergency(contacts) {
+    var blackbox = "";
+    var hasEmergency = false;
+    var emergencyList = document.getElementById("emergencyList");
+    for (var i = 0; i < contacts.length; i++) {
+        if (contacts[i].emergency) {
+            hasEmergency = true;
+            var imageOrLetter = (contacts[i].image && contacts[i].image !== "imgs/" && contacts[i].image !== "imgs/undefined")
+                ? `<img src="${contacts[i].image}" class="img-fluid rounded-3 w-100 h-100 object-fit-cover">`
+                : `<span>${letter(contacts[i].name)}</span>`;
+            blackbox += ` <div class="col-12 col-md-6 col-xl-12 fav">
+                                        <div class="d-flex gap-3 px-2 bg-light mb-2 rounded-3 align-items-center ">
+                                            <div>
+                                                <div
+                                                    class="text-white fw-semibold fs-14 d-flex justify-content-center align-items-center img-holder text-uppercase">
+                                                    ${imageOrLetter}
+                                                </div>
+                                            </div>
+                                            <div class="w-50 mt-3 ">
+                                                <h4 class="text-dark mb-0 fw-medium fs-14">
+                                                    ${contacts[i].name}
+                                                </h4>
+                                                <p class="text-info fs-12 fw-medium">
+                                                    ${contacts[i].number}
+                                                </p>
+                                            </div>
+                                            <a href="tel:${contacts[i].number}" class="ms-auto"> 
+                                                <div
+                                                    class="svg-info-wrap wh-36 d-flex justify-content-center align-items-center rounded-3 light-red">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                                        width="12px" height="12px">
+                                                        <path fill="#FF2056"
+                                                            d="M160.2 25C152.3 6.1 131.7-3.9 112.1 1.4l-5.5 1.5c-64.6 17.6-119.8 80.2-103.7 156.4 37.1 175 174.8 312.7 349.8 349.8 76.3 16.2 138.8-39.1 156.4-103.7l1.5-5.5c5.4-19.7-4.7-40.3-23.5-48.1l-97.3-40.5c-16.5-6.9-35.6-2.1-47 11.8l-38.6 47.2C233.9 335.4 177.3 277 144.8 205.3L189 169.3c13.9-11.3 18.6-30.4 11.8-47L160.2 25z" />
+                                                    </svg>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>`;
+        }
+    }
+    if (hasEmergency) {
+        emergencyList.innerHTML = blackbox;
+    } else {
+        emergencyList.innerHTML = `
+            <div class="text-center contact-wrapper" >
+                <p class="text-info fs-14 fw-normal">No favourite yet</p>
+            </div>`;
+    }
+    localStorage.setItem("all contacts", JSON.stringify(contacts));
+}
+
+function favoriteCounter() {
+    var count = 0;
+    for (var i = 0; i < contactInfo.length; i++) {
+        if (contactInfo[i].favorite === true) {
+            count++;
+        }
+    }
+    for (var j = 0; j < favContactTotal.length; j++) {
+        favContactTotal[j].innerHTML = count;
+    }
+}
+function emergencyCounter() {
+    var count = 0;
+    for (var i = 0; i < contactInfo.length; i++) {
+        if (contactInfo[i].emergency === true) {
+            count++;
+        }
+    }
+    for (var j = 0; j < emergencyContactTotal.length; j++) {
+        emergencyContactTotal[j].innerHTML = count;
+    }
+}

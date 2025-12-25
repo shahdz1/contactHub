@@ -328,18 +328,20 @@ nav {
     border-top: 1px solid #f6f3f4;
 }
 
-#contactCard .contact-holder{
+#contactCard .contact-holder {
     border: 1px solid #f6f3f4;
     box-shadow: 0 1px 3px 0 #0000001a;
-    transition: all .2s ease ;
-    -webkit-transition: all .2s ease ;
-    -moz-transition: all .2s ease ;
-    -ms-transition: all .2s ease ;
-    -o-transition: all .2s ease ;
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
 }
-#contactCard .contact-holder:hover{
+
+#contactCard .contact-holder:hover {
     box-shadow: 0 2px 8px 2px #0000001a;
 }
+
 .img-holder {
     border-radius: 12px;
     -webkit-border-radius: 12px;
@@ -386,18 +388,22 @@ input.is-valid {
 input.is-invalid {
     border: 1px solid red;
 }
-.no-contact{
+
+.no-contact {
     background-color: #F3F4F6;
     width: 80px;
     height: 80px;
 }
-.fs-12{
+
+.fs-12 {
     font-size: 12px;
 }
-#noContact small{
+
+#noContact small {
     color: #99a1af;
 }
-#favoriteContact{
+
+#favoriteList {
     background-color: #fbf9fa;
     gap: 12px;
     border-radius: 12px;
@@ -406,10 +412,59 @@ input.is-invalid {
     -ms-border-radius: 12px;
     -o-border-radius: 12px;
 }
-#favoriteContact:not(:last-child){
+
+#favoriteList:not(:last-child) {
     margin-block-end: 10px;
 }
-#favoriteContact .img-holder{
+
+#favoriteList .img-holder,
+#emergencyList .img-holder {
     width: 40px;
     height: 40px;
+}
+
+#favoriteList .fav:hover>div {
+    --bs-light-rgb: 255, 251, 235;
+}
+
+#emergencyList .fav:hover path,
+#favoriteList .fav:hover path {
+    fill: white;
+}
+
+#favoriteList .fav:hover .light-green {
+    background-color: #00BC7D;
+}
+
+#emergencyList .fav,
+#favoriteList .fav {
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
+}
+
+#emergencyList .fav:hover>div {
+    --bs-light-rgb: 255, 241, 242;
+
+}
+
+#emergencyList .fav:hover .light-red {
+    background-color: #FF2056;
+}
+
+.editContactBtn:hover path{
+    fill: #4F39F6;
+}
+.delet:hover path{
+    fill:#F41133;
+}
+.delet,
+.editContactBtn {
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
 }
