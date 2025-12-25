@@ -316,6 +316,8 @@ function deletContact(deletedContact) {
             totalContactCounter()
             emergencyCounter()
             favoriteCounter()
+            addToEmergency(contactInfo);
+            addToFavourite(contactInfo);
             Swal.fire({
                 title: "Deleted!",
                 text: "Your contact has been deleted.",
