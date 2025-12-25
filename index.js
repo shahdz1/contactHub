@@ -339,7 +339,7 @@ function search(element) {
 function validFormInput(element) {
     var regex = {
         contactName: /^[\u0621-\u064Aa-zA-Z\s]{2,50}$/,
-        contactNumber: /^(?:\+20|20|01)[0-9]{9}$/,
+        contactNumber: /^(?:\+20|20|0)[0-9]{10}$/,
         contactEmail: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     };
     var isvalid = regex[element.id].test(element.value);
